@@ -23,7 +23,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   reservation,
   hasFavorited,
 }) => {
-  const price = reservation ? reservation.totalPrice : data?.price;
+  const price = reservation ? reservation.leaseTerms : data?.price;
 
   let reservationDate;
   if (reservation) {
@@ -47,12 +47,15 @@ const ListingCard: React.FC<ListingCardProps> = ({
           />
         </div>
       </div>
-      <Link href={`/listings/${data.id}`} className="col-span-1 cursor-pointer">
+      <Link
+        href={`/listings/${reservation ? data.listing.id : data.id}`}
+        className="col-span-1 cursor-pointer"
+      >
         <div className="flex flex-col gap-1 w-full">
           <div className=" overflow-hidden md:rounded-xl rounded-md">
             <div className="aspect-[1/0.95] relative bg-gray-100">
               <Image
-                imageSrc={data.photos[0]}
+                imageSrc={reservation ? data.listing.photos[0] : data.photos[0]}
                 fill
                 alt={data.title}
                 effect="zoom"
@@ -60,7 +63,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
             </div>
           </div>
           <span className="font-semibold text-[16px] mt-[4px]">
-            {data?.location.place}, {data?.location.region}
+            {reservation ? data.listing.location.place : data?.location.place},{" "}
+            {reservation ? data.listing.location.region : data?.location.region}
           </span>
           <span className="font-light text-neutral-500 text-sm">
             {reservationDate || data.placeType}

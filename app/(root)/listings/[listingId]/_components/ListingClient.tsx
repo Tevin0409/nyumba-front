@@ -12,13 +12,12 @@ import {
   eachDayOfInterval,
 } from "date-fns";
 import { Range } from "react-date-range";
-// import { User } from "next-auth";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
 import ListingReservation from "./ListingReservation";
-// import { createReservation } from "@/services/reservation";
+import { createLease } from "@/lib/actions/leases.actions";
 
 const initialDateRange = {
   startDate: new Date(),
@@ -35,11 +34,7 @@ interface ListingClientProps {
   id: string;
   title: string;
   price: number;
-  user:
-    | (User & {
-        id: string;
-      })
-    | undefined;
+  user: User | undefined;
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
@@ -100,14 +95,21 @@ const ListingClient: React.FC<ListingClientProps> = ({
       try {
         const { endDate, startDate } = dateRange;
 
-        // await createReservation({
-        //   listingId: id,
-        //   endDate,
-        //   startDate,
-        //   totalPrice,
-        // });
-        router.push("/trips");
-        toast.success(`You've successfully reserved "${title}".`);
+        const response = await createLease(id, {
+          tenant: user.id,
+          propertyDetails: id,
+          leaseTerms: totalPrice,
+          startDate,
+          endDate,
+        });
+        // router.push("/leases");
+        if (response.success) {
+          toast.success(`You've successfully reserved "${title}".`);
+          router.push("/leases");
+        } else if (response.error) {
+          toast.error(response.error);
+        }
+
         // queryClient.invalidateQueries(["trips", user.id]);
         // queryClient.invalidateQueries(["reservations", user.id]);
       } catch (error: any) {
@@ -126,7 +128,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
           totalPrice={totalPrice}
           onChangeDate={(name, value) => setDateRange(value)}
           dateRange={dateRange}
-          onSubmit={() => console.log("hel")}
+          onSubmit={() => onCreateReservation()}
           isLoading={isLoading}
           disabledDates={disabledDates}
         />

@@ -36,9 +36,9 @@ const ListingPage = async ({ params: { listingId } }: { params: IParams }) => {
       </div>
 
       <ListingClient
-        id={propertyInfo.id}
-        price={propertyInfo.price}
-        user={currentUser}
+        id={propertyInfo!.id}
+        price={propertyInfo!.price}
+        user={JSON.parse(currentUser!)}
         title={propertyInfo.title}
       >
         <ListingInfo

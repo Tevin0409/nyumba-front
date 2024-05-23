@@ -97,7 +97,7 @@ export const LISTINGS_BATCH = 16;
 export const menuItems = [
   {
     label: "My Reservations",
-    path: "/listings/trips",
+    path: "/leases",
   },
   // {
   //   label: "My favorites",

@@ -63,7 +63,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
 
                   <MenuItem
                     onClick={() => redirect("/listings/create")}
-                    label="Share your home"
+                    label="Digi your home"
                   />
                   <hr />
                   <MenuItem label="Log out" onClick={() => logout()} />
